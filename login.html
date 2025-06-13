@@ -1,0 +1,111 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Culers FC Barcelona Fan Hub</title>
+    <link rel="stylesheet" href="styke.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #a50044, #004d98);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+        }
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            color: #333;
+        }
+        .login-container h2 {
+            margin-bottom: 25px;
+            color: #004d98;
+        }
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .login-container button {
+            background-color: #a50044;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        .login-container button:hover {
+            background-color: #8c003a;
+        }
+        .login-container p {
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        .login-container p a {
+            color: #004d98;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-container p a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: crimson;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login to Culers</h2>
+        <div id="error-message" class="error-message"></div>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="login()">Login</button>
+        <p>Don't have an account? <a href="register.html">Register here</a></p>
+    </div>
+
+    <script>
+        // Check if already logged in. If so, redirect to index.html
+        if (localStorage.getItem("loggedIn") === "true" && localStorage.getItem("user")) {
+            window.location.href = "index.html";
+        }
+
+        function login() {
+            const usernameInput = document.getElementById("username").value;
+            const passwordInput = document.getElementById("password").value;
+            const errorMessageDiv = document.getElementById("error-message");
+
+            let allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+
+            const foundUser = allUsers.find(user => user.username === usernameInput && user.password === passwordInput);
+
+            if (foundUser) {
+                localStorage.setItem("loggedIn", "true");
+                localStorage.setItem("user", usernameInput);
+                window.location.href = "index.html"; // Toos ugu gudub index.html
+            } else {
+                errorMessageDiv.textContent = "Invalid username or password.";
+            }
+        }
+    </script>
+</body>
+</html>

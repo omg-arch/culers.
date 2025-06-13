@@ -1,0 +1,353 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Profile - Culers</title>
+  <link rel="stylesheet" href="styke.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f4f4f4;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background: linear-gradient(to right, #a50044, #004d98);
+      color: white;
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logout-btn {
+      background-color: #fff;
+      color: #004d98;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .logout-btn:hover {
+      background-color: #a50044;
+      color: white;
+    }
+    .container {
+      max-width: 900px;
+      background: white;
+      margin: 30px 20px;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      box-sizing: border-box; /* Include padding in width calculation */
+    }
+
+    /* PROFILE HEADER STYLES */
+    .profile-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr; /* Profile pic on left, stats on right */
+      gap: 20px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ccc; /* Separator line like in the image */
+      margin-bottom: 20px;
+    }
+
+    .profile-pic-container {
+      display: flex;
+      justify-content: center; /* Center the image in its grid cell */
+    }
+
+    .profile-pic {
+      width: 100px; /* Slightly larger for prominence */
+      height: 100px;
+      border-radius: 50%;
+      background-color: #eee;
+      background-position: center;
+      background-size: cover;
+      border: 3px solid #004d98;
+      object-fit: cover; /* Ensures the image covers the area without distortion */
+    }
+
+    .profile-stats-and-bio {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .profile-username {
+      font-size: 24px; /* Adjust size */
+      font-weight: 700;
+      margin: 0 0 5px 0; /* Remove default margins */
+      display: flex; /* Allow button to sit next to username */
+      align-items: center;
+    }
+
+    .profile-stats {
+      display: flex;
+      gap: 30px; /* Space between follow, followers, posts */
+      margin-bottom: 10px;
+    }
+
+    .stat-item {
+      text-align: center;
+      cursor: pointer; /* Added cursor for clickable stats */
+      user-select: none; /* Prevent text selection */
+    }
+
+    .stat-number {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #666;
+    }
+    /* END PROFILE HEADER STYLES */
+
+
+    section {
+      margin-top: 20px;
+    }
+    h3 {
+      border-bottom: 2px solid #004d98;
+      padding-bottom: 8px;
+      font-weight: 700;
+      color: #004d98;
+      margin-bottom: 10px;
+    }
+    
+    .no-items {
+      color: #666;
+      font-style: italic;
+      margin-top: 10px;
+    }
+    .posts-container {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .post {
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px 15px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+      word-break: break-word;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .post p {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 15px;
+        line-height: 1.4;
+    }
+    .post strong {
+      color: #004d98;
+    }
+    .delete-post-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: crimson;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        z-index: 10;
+    }
+    .delete-post-btn:hover {
+        background-color: darkred;
+    }
+    .post img, .post video {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 4px;
+        margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  My Profile
+  <button class="logout-btn" id="logoutBtn">Logout</button>
+</header>
+
+<div class="container">
+
+  <div class="profile-info-grid">
+    <div class="profile-pic-container">
+      <div id="profilePic" class="profile-pic" style="background-image: url('https://via.placeholder.com/100?text=PP');"></div>
+    </div>
+    <div class="profile-stats-and-bio">
+      <p class="profile-username" id="profileUsername">Username</p>
+      <div class="profile-stats">
+        <div class="stat-item" id="postsStatItem">
+          <span class="stat-number" id="postsCount">0</span>
+          <span class="stat-label">Posts</span>
+        </div>
+        <div class="stat-item" id="followersStatItem">
+          <span class="stat-number" id="followersCountText">0</span>
+          <span class="stat-label">Followers</span>
+        </div>
+        <div class="stat-item" id="followingStatItem">
+          <span class="stat-number" id="followingCountText">0</span>
+          <span class="stat-label">Following</span>
+        </div>
+      </div>
+      </div>
+  </div>
+
+  <section>
+    <h3>Your Posts</h3>
+    <div class="posts-container" id="userPosts">
+      <p class="no-items">You have not posted anything yet.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const currentUser = localStorage.getItem('user');
+  // Redirect to login if not logged in
+  if (!currentUser) {
+    window.location.href = 'login.html';
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('loggedIn');
+    window.location.href = 'login.html';
+  });
+
+  let allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+  let posts = JSON.parse(localStorage.getItem('posts') || '[]');
+
+  function getUserProfilePic(username) {
+    const user = allUsers.find(u => u.username === username);
+    return user && user.profilePic ? user.profilePic : 'https://via.placeholder.com/100?text=PP';
+  }
+
+  const profilePicDiv = document.getElementById('profilePic');
+  const profileUsernameElem = document.getElementById('profileUsername');
+
+  // Removed bio-related elements and functions from here
+  // const bioDisplayAreaElem = document.getElementById('bio-display-area'); 
+  // const profileBioTextareaElem = document.getElementById('bio-textarea');
+  // const bioCountElem = document.getElementById('bioCount'); 
+
+  // Removed all bio-related functions
+  // function showBioEditArea() { ... }
+  // function saveBio() { ... }
+  // function cancelBioEdit() { ... }
+
+  // Function to update user profile information (username, picture)
+  function updateProfileInfo() {
+      const userObj = allUsers.find(u => u.username === currentUser);
+
+      if (userObj) {
+          profilePicDiv.style.backgroundImage = `url('${getUserProfilePic(currentUser)}')`;
+          profileUsernameElem.textContent = currentUser;
+      } else {
+          profilePicDiv.style.backgroundImage = `url('https://via.placeholder.com/100?text=PP')`;
+          profileUsernameElem.textContent = "Unknown User";
+      }
+  }
+
+
+  // --- STATS UPDATE ---
+  const postsCountElem = document.getElementById('postsCount');
+  const followersCountTextElem = document.getElementById('followersCountText');
+  const followingCountTextElem = document.getElementById('followingCountText');
+
+  function updateStats() {
+      // Posts Count
+      const userPostsCount = posts.filter(p => p.user === currentUser).length;
+      postsCountElem.textContent = userPostsCount;
+
+      // Following Count
+      const followingList = JSON.parse(localStorage.getItem('following_' + currentUser) || '[]');
+      followingCountTextElem.textContent = followingList.length;
+
+      // Followers Count
+      const followers = allUsers.filter(u => {
+          const f = JSON.parse(localStorage.getItem('following_' + u.username) || '[]');
+          return f.includes(currentUser);
+      }).map(u => u.username);
+      followersCountTextElem.textContent = followers.length;
+  }
+
+  // Function to render user's posts
+  function renderUserPosts() {
+    const userPostsContainer = document.getElementById('userPosts');
+    const userPosts = [...posts].reverse().filter(p => p.user === currentUser); // Reverse to show newest first
+    userPostsContainer.innerHTML = ''; // Clear existing posts
+
+    if(userPosts.length === 0) {
+      userPostsContainer.innerHTML = '<p class="no-items">You have not posted anything yet.</p>';
+    } else {
+      userPosts.forEach(post => {
+        const postDiv = document.createElement('div');
+        postDiv.className = 'post';
+
+        // Find the original index of the post in the 'posts' array
+        // This is important for deleting the correct post
+        const originalPostIndex = posts.findIndex(pItem => 
+            pItem.text === post.text && 
+            pItem.user === post.user && 
+            JSON.stringify(pItem.media) === JSON.stringify(post.media)
+        );
+        
+        const deleteButtonHtml = `<button class="delete-post-btn" onclick="deletePost(${originalPostIndex})">Delete</button>`;
+
+        let mediaHtml = '';
+        if (post.media) {
+            mediaHtml = `<div><${post.media.type} src="${post.media.url}" controls></${post.media.type}></div>`;
+        }
+
+        postDiv.innerHTML = `
+            ${deleteButtonHtml}
+            <p>${post.text}</p>
+            ${mediaHtml}
+        `;
+        userPostsContainer.appendChild(postDiv);
+      });
+    }
+    updateStats(); // Update stats after rendering posts
+  }
+
+  // Function to delete a post
+  function deletePost(originalIndex) {
+    if (confirm("Are you sure you want to delete this post?")) {
+        posts.splice(originalIndex, 1);
+        localStorage.setItem('posts', JSON.stringify(posts));
+        renderUserPosts(); // Re-render posts on the profile page
+    }
+  }
+
+  // Initial calls to render profile info and posts
+  updateProfileInfo();
+  renderUserPosts();
+</script>
+
+</body>
+</html>

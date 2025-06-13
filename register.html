@@ -1,0 +1,190 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register - Culers</title>
+  <link rel="stylesheet" href="styke.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .register-container {
+      background: white;
+      padding: 30px 35px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #004d98;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="file"]:focus {
+      border-color: #004d98;
+      outline: none;
+    }
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: #004d98;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background: #a50044;
+    }
+    #preview {
+      margin-top: 15px;
+      display: none;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #004d98;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+    .error-msg {
+      color: #a50044;
+      margin-top: 8px;
+      font-size: 13px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <h2>Create Account</h2>
+    <form id="registerForm" autocomplete="off">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" name="firstName" required />
+
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" name="lastName" required />
+
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+
+      <label for="profilePicInput">Profile Picture</label>
+      <input type="file" id="profilePicInput" accept="image/*" required />
+
+      <img id="preview" alt="Profile Preview" />
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <button type="submit">Register</button>
+    </form>
+  </div>
+
+  <script>
+    const registerForm = document.getElementById('registerForm');
+    const profilePicInput = document.getElementById('profilePicInput');
+    const preview = document.getElementById('preview');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // Show preview of selected image
+    profilePicInput.addEventListener('change', () => {
+      const file = profilePicInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+      }
+    });
+
+    registerForm.addEventListener('submit', e => {
+      e.preventDefault();
+      errorMsg.style.display = 'none';
+
+      const firstName = registerForm.firstName.value.trim();
+      const lastName = registerForm.lastName.value.trim();
+      const username = registerForm.username.value.trim();
+      const password = registerForm.password.value.trim();
+      const file = profilePicInput.files[0];
+
+      if (!file) {
+        errorMsg.textContent = 'Please select a profile picture.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      // Load all users
+      let allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+
+      // Check for duplicate username
+      if (allUsers.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        errorMsg.textContent = 'Username already exists. Try another.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      // Read image as base64 and save user
+      const reader = new FileReader();
+      reader.onload = e => {
+        const profilePicBase64 = e.target.result;
+
+        const newUser = {
+          firstName,
+          lastName,
+          username,
+          password,
+          profilePic: profilePicBase64
+        };
+
+        allUsers.push(newUser);
+        localStorage.setItem('allUsers', JSON.stringify(allUsers));
+
+        alert('Registration successful! You can now log in.');
+        window.location.href = 'login.html';
+      };
+
+      reader.readAsDataURL(file);
+    });
+  </script>
+
+</body>
+</html>

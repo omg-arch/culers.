@@ -1,0 +1,441 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Messages - Culers FC Barcelona Fan Hub</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background: linear-gradient(to bottom, #a50044, #004d98);
+            color: white;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar h2 {
+            margin: 0 0 20px;
+        }
+        .sidebar a {
+            width: 100%;
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+        .sidebar a:hover, .sidebar a.active-nav {
+            background: rgba(255,255,255,0.2);
+        }
+        .main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: white;
+            display: flex;
+            justify-content: center; /* To center the messages container */
+            align-items: flex-start;
+        }
+
+        /* Messages specific styles */
+        .messages-container {
+            display: flex;
+            width: 100%;
+            max-width: 900px; /* Adjust as needed */
+            height: 80vh; /* Make it take up most of the screen height */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .messages-sidebar {
+            width: 250px;
+            border-right: 1px solid #eee;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .messages-sidebar h3 {
+            margin-top: 0;
+            color: #004d98;
+            border-bottom: 2px solid #004d98;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .chat-list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .chat-list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .chat-list-item.active {
+            background-color: #e0e0e0;
+        }
+
+        .chat-list-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .chat-list-item span {
+            font-weight: bold;
+        }
+
+        .message-content-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            background-color: #f8f8f8;
+        }
+        .message-header strong {
+            font-size: 1.2em;
+            margin-left: 10px;
+        }
+
+        .message-display {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message-input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            align-items: center;
+        }
+
+        .message-input-area input {
+            flex-grow: 1;
+            border-radius: 20px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+
+        .message-input-area button {
+            padding: 10px 20px;
+            border-radius: 20px;
+            background-color: #004d98;
+            color: white;
+            font-weight: normal;
+            border: none; /* Add border none to prevent default button styling */
+            cursor: pointer;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message-bubble.sent {
+            background-color: #004d98;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message-bubble.received {
+            background-color: #e0e0e0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .profile-pic-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* Search bar for messages */
+        .message-search-container {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .message-search-container input {
+            width: calc(100% - 20px); /* Account for padding */
+            padding: 8px 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2><i>CULERS</i></h2>
+        <a href="index.html">Home</a>
+        <a href="index.html" onclick="localStorage.setItem('redirectToShowPost', 'true');">Post</a>
+        <a href="messages.html" class="active-nav">Messages</a>
+        <a href="index.html" onclick="localStorage.setItem('redirectToShowProfile', 'true');">Profile</a>
+    </nav>
+
+    <main class="main">
+        <div class="messages-container">
+            <div class="messages-sidebar">
+                <h3>Messages</h3>
+                <div class="message-search-container">
+                    <input type="text" id="chatSearchInput" placeholder="Search chats..." onkeyup="filterChatList()">
+                </div>
+                <div class="chat-list" id="chat-list">
+                    <p style="text-align: center; color: #666; padding: 20px;">Loading chats...</p>
+                </div>
+            </div>
+            <div class="message-content-area" id="message-content-area">
+                <div class="message-header" id="message-header" style="display: none;">
+                    <img id="chat-profile-pic" class="profile-pic-small" alt="Profile Picture" />
+                    <strong id="chat-username"></strong>
+                </div>
+                <div class="message-display" id="message-display">
+                    <p style="text-align: center; color: #999; margin-top: 50px;">Select a chat to start messaging.</p>
+                </div>
+                <div class="message-input-area" id="message-input-area" style="display: none;">
+                    <input type="text" placeholder="Type a message..." id="message-input" />
+                    <button id="send-message-btn">Send</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check for login status
+        if (!localStorage.getItem("loggedIn") || !localStorage.getItem("user")) {
+            window.location.href = "login.html"; // Redirect to login if not authenticated
+        }
+
+        const currentUser = localStorage.getItem('user');
+        let allUsers = JSON.parse(localStorage.getItem('allUsers') || "[]");
+        let activeChatUser = null; // This will hold the username of the currently active chat
+
+        // --- Helper Functions (Duplicated from your original index.html logic) ---
+        function getConversationKey(user1, user2) {
+            return [user1, user2].sort().join('_');
+        }
+
+        function getMessages(user1, user2) {
+            const key = getConversationKey(user1, user2);
+            return JSON.parse(localStorage.getItem('messages_' + key) || "[]");
+        }
+
+        function saveMessages(user1, user2, messages) {
+            const key = getConversationKey(user1, user2);
+            localStorage.setItem('messages_' + key, JSON.stringify(messages));
+        }
+
+        function getUserProfilePic(username, size = 'small') {
+            const user = allUsers.find(u => u.username === username);
+            let placeholder = 'https://via.placeholder.com/40?text=PP';
+            if (size === 'large') {
+                placeholder = 'https://via.placeholder.com/100?text=PP';
+            }
+            return user && user.profilePic ? user.profilePic : placeholder;
+        }
+
+        function getFollowingList(user) {
+            return JSON.parse(localStorage.getItem('following_' + user) || "[]");
+        }
+        function getFollowersList(user) { // Added this helper to check who follows current user
+            return allUsers.filter(u => getFollowingList(u.username).includes(user)).map(u => u.username);
+        }
+        // --- End of Helper Functions ---
+
+
+        // Main logic for Messages page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadChatList();
+
+            const sendMessageBtn = document.getElementById('send-message-btn');
+            if (sendMessageBtn) {
+                sendMessageBtn.addEventListener('click', sendMessage);
+            }
+
+            const messageInput = document.getElementById('message-input');
+            if (messageInput) {
+                messageInput.addEventListener('keypress', (event) => {
+                    if (event.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        });
+
+        function loadChatList() {
+            const chatListDiv = document.getElementById('chat-list');
+            if (!chatListDiv) return;
+
+            const currentUserFollowing = getFollowingList(currentUser);
+            const currentUserFollowers = getFollowersList(currentUser);
+
+            // Get a unique list of all users currentUser can chat with:
+            // 1. Users currentUser is following
+            // 2. Users who are following currentUser
+            // 3. Any user with whom currentUser already has an existing conversation (even if not following/followed)
+            let chatableUsers = new Set();
+
+            // Add users currentUser is following
+            currentUserFollowing.forEach(username => chatableUsers.add(username));
+
+            // Add users who are following currentUser
+            currentUserFollowers.forEach(username => chatableUsers.add(username));
+
+            // Add users from existing conversations
+            allUsers.forEach(user => {
+                if (user.username === currentUser) return; // Don't add self
+                const key = getConversationKey(currentUser, user.username);
+                if (localStorage.getItem('messages_' + key)) {
+                    chatableUsers.add(user.username);
+                }
+            });
+
+            // Filter out the current user themselves
+            const finalChatUsers = Array.from(chatableUsers).filter(username => username !== currentUser);
+
+            // Sort chat users alphabetically for consistent display
+            finalChatUsers.sort((a, b) => a.localeCompare(b));
+
+            if (finalChatUsers.length === 0) {
+                chatListDiv.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No active chats. Start following users or get followed!</p>';
+            } else {
+                const userListHtml = finalChatUsers.map(username => {
+                    // Check if mutual friends
+                    const isMutualFriend = currentUserFollowing.includes(username) && currentUserFollowers.includes(username);
+                    const statusText = isMutualFriend ? '<span style="font-size:0.8em; color: green; margin-left: 5px;"> (Friend)</span>' : '';
+
+                    return `
+                        <div class="chat-list-item" data-username="${username}" id="chat-list-item-${username}">
+                            <img src="${getUserProfilePic(username, 'small')}" alt="${username} Profile" />
+                            <span>${username}</span>${statusText}
+                        </div>
+                    `;
+                }).join('');
+                
+                chatListDiv.innerHTML = userListHtml;
+
+                // Add click listeners to all chat list items
+                document.querySelectorAll('.chat-list-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const username = item.dataset.username;
+                        openChat(username);
+                    });
+                });
+            }
+        }
+
+        function filterChatList() {
+            const input = document.getElementById('chatSearchInput');
+            const filter = input.value.toLowerCase();
+            const chatListItems = document.querySelectorAll('.chat-list-item');
+
+            chatListItems.forEach(item => {
+                const username = item.dataset.username.toLowerCase();
+                if (username.includes(filter)) {
+                    item.style.display = ''; // Show item
+                } else {
+                    item.style.display = 'none'; // Hide item
+                }
+            });
+        }
+
+
+        function openChat(username) {
+            activeChatUser = username;
+
+            // Update active class in sidebar (chat list)
+            document.querySelectorAll('.chat-list-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const activeItem = document.getElementById(`chat-list-item-${username}`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+
+            // Update message header (profile pic and username)
+            document.getElementById('message-header').style.display = 'flex';
+            document.getElementById('chat-profile-pic').src = getUserProfilePic(username, 'small');
+            document.getElementById('chat-username').textContent = username;
+
+            // Show message input area
+            document.getElementById('message-input-area').style.display = 'flex';
+
+            // Load and display messages for the selected chat
+            renderMessages(username);
+        }
+
+        function renderMessages(otherUser) {
+            const messages = getMessages(currentUser, otherUser);
+            const messageDisplay = document.getElementById('message-display');
+            messageDisplay.innerHTML = ''; // Clear previous messages
+
+            if (messages.length === 0) {
+                messageDisplay.innerHTML = `<p style="text-align: center; color: #999; margin-top: 50px;">Say hello to ${otherUser}!</p>`;
+            } else {
+                messages.forEach(msg => {
+                    const bubbleClass = msg.sender === currentUser ? 'sent' : 'received';
+                    messageDisplay.innerHTML += `
+                        <div class="message-bubble ${bubbleClass}">
+                            ${msg.text}
+                        </div>
+                    `;
+                });
+                // Scroll to the bottom of the messages
+                messageDisplay.scrollTop = messageDisplay.scrollHeight;
+            }
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const text = messageInput.value.trim();
+
+            if (!text || !activeChatUser) return; // Don't send empty messages or if no chat is active
+
+            let messages = getMessages(currentUser, activeChatUser);
+            messages.push({ sender: currentUser, text: text, timestamp: Date.now() }); // Add timestamp
+            saveMessages(currentUser, activeChatUser, messages);
+
+            messageInput.value = ''; // Clear input field
+            renderMessages(activeChatUser); // Re-render messages to show the new one
+        }
+    </script>
+</body>
+</html>

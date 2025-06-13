@@ -1,0 +1,920 @@
+ /* Guud ahaan resets & basic styling */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: row; /* Default desktop layout */
+    overflow-x: hidden; /* Prevent horizontal scroll when sidebar slides */
+}
+
+/* Add this to prevent scrolling main content when sidebar is open on mobile */
+body.sidebar-open {
+    overflow: hidden;
+}
+
+/* Sidebar Styling (Desktop Default) */
+.sidebar {
+    width: 220px; /* Default width on desktop */
+    background: linear-gradient(to bottom, #a50044, #004d98); /* FC Barcelona colors */
+    color: white;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    position: sticky; /* Keep sidebar visible when scrolling main content */
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 50;
+    /* transition: transform 0.3s ease-in-out;  <-- This was important, we'll move it to mobile-specific */
+}
+
+.sidebar h2 {
+    margin: 0 0 20px;
+    text-align: center;
+    font-size: 2em;
+    letter-spacing: 1px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.sidebar a {
+    width: 100%;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-weight: bold;
+    margin-left: 20px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar a:hover, .sidebar a.active-nav {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+/* Main Content Area */
+.main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* Hamburger menu (Hidden on Desktop) */
+.hamburger {
+    display: none; /* Hidden by default on desktop */
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    position: fixed; /* Fixed position for mobile */
+    top: 10px;
+    left: 15px;
+    z-index: 100; /* Ensure it's on top */
+    background-color: #004d98; /* Match header/sidebar color */
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* -------------------------------------- */
+/* MEDIA QUERIES FOR RESPONSIVE DESIGN (MUIIM!) */
+/* -------------------------------------- */
+
+/* For screens smaller than 768px (e.g., tablets in portrait, large phones) */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column; /* Stack sidebar and main content vertically on mobile */
+        height: auto;
+    }
+    #mainNav {
+  
+  background-color: white;
+  color: black;
+  width: 200px;
+  height: auto;
+  padding: 20px;
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  z-index: 9999;
+  border: 1px solid #ccc;
+}
+
+
+    .sidebar {
+        /*
+         * MOBILE SIDEBAR STYLES (MUIIM!)
+         * Halkan waxaan ku hagaajinaynaa size-ka iyo dhaqdhaqaaqa mobile-ka
+         */
+        width: 180px; /* Ballaca sidebar-ka markuu soo muuqdo (yaryar) */
+        height: 100vh; /* Full height */
+        position: fixed; /* Fixed position for sliding */
+        top: 0;
+        left: 0;
+        transform: translateX(-100%); /* Initially hide it off-screen */
+        box-shadow: 2px 0 10px rgba(0,0,0,0.3); /* Stronger shadow for sliding effect */
+        flex-direction: column; /* Keep column for sliding menu */
+        align-items: flex-start; /* Align items to the start */
+        padding-top: 60px; /* Space for hamburger/header area */
+        z-index: 1000; /* Ensure it's above other content */
+        transition: transform 0.3s ease-in-out; /* Smooth slide animation */
+        margin-left: 200px;
+    }
+
+    /* Class added by JavaScript when sidebar is open */
+    .sidebar.active { 
+        transform: translateX(0); /* Slide into view */
+    }
+
+    .sidebar h2 {
+        display: block; /* Show logo/title on sliding menu */
+        width: 100%;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .sidebar a {
+        padding: 15px 20px; /* Larger touch targets */
+        margin-left: 0; /* Reset margin */
+        font-size: 16px; /* Larger font size */
+        text-align: left;
+    }
+    
+    /* Make hamburger visible on small screens */
+    .hamburger {
+        display: block; /* Show hamburger menu button */
+        left: 10px;
+        top: 10px;
+        padding: 5px 12px;
+        border-radius: 5px;
+        background-color: #004d98;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1001; /* Above sidebar when open */
+    }
+
+    /* Adjust main content for mobile */
+    .main {
+        padding: 15px;
+        margin-top: 0;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    /* Overlay for when sidebar is open */
+    .overlay-backdrop {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+        z-index: 999; /* Below sidebar, above content */
+    }
+    .overlay-backdrop.active { /* This class is added by JS */
+        display: block; 
+    }
+
+    /* ... Keep other mobile-specific styles for modals, profile, explore etc. ... */
+    /* Modal adjustments for mobile */
+    .modal-content {
+        width: 90%; /* Wider modal on smaller screens */
+        padding: 15px;
+    }
+
+    .main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            
+        }
+
+    /* Profile styles adjustments for mobile */
+    .profile-info-grid {
+        grid-template-columns: 1fr; /* Stack profile info vertically */
+        text-align: center;
+    }
+    .profile-pic-container {
+        justify-content: center; /* Center profile picture */
+    }
+    .profile-username-display {
+        justify-content: center; /* Center username */
+    }
+    .profile-stats {
+        justify-content: center; /* Center stats */
+        gap: 15px; /* Reduce gap */
+    }
+    .profile-posts-grid {
+        grid-template-columns: 1fr; /* Stack profile posts vertically */
+    }
+    .logout-btn-container {
+        position: static; /* Remove absolute positioning */
+        margin-top: 15px; /* Add margin */
+        text-align: center;
+    }
+    .logout-btn-container button {
+        width: 100%; /* Full width button */
+    }
+
+    /* Explore section adjustments for mobile */
+    .explore-container {
+        padding: 0; /* Remove internal padding to maximize video space */
+        box-shadow: none; /* Remove shadow to blend better */
+        border-radius: 0; /* No rounded corners */
+        max-width: 100%; /* Full width */
+        height: 100vh; /* Adjust height to fill screen */
+        padding-top: 50px; /* Space for hamburger/header */
+        box-sizing: border-box; /* Include padding in height */
+    }
+    .explore-item {
+        height: calc(100vh - 50px - 10px); /* Each item takes full height of container, minus header and margin */
+        border-radius: 0;
+    }
+    .explore-item .overlay {
+        padding: 15px; /* Smaller padding for overlay */
+    }
+    .explore-item .overlay .explore-actions {
+        right: 10px; /* Closer to edge */
+        font-size: 18px; /* Smaller icon size */
+    }
+    .explore-item .overlay .explore-actions button {
+        font-size: 20px;
+    }
+    .post-media {
+    width: 100%;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    max-height: 400px; /* Yaraynta cabbirka ugu badan */
+}
+
+.post-media img, .post-media video {
+    width: 100%;
+    height: auto;
+    max-height: 100%; /* Hubi in sawirku uusan ka badnaan qaybta .post-media */
+    object-fit: contain; /* Ama 'cover' haddii aad rabto inuu buuxiyo oo laga gooyo */
+    display: block;
+    border-radius: 0;
+}
+}
+
+/* For even smaller screens (e.g., older phones, very narrow views) */
+@media (max-width: 480px) {
+    .sidebar {
+        width: 160px; /* Xitaa ballac yaryar on very small screens */
+    }
+    .sidebar a {
+        font-size: 14px;
+        padding: 12px 15px;
+    }
+    #mainNav {
+  display: none !important;
+}
+
+    /* ... other styles for 480px ... */
+}
+
+
+/* ... Keep ALL your other CSS styles (post, modal, profile, notifications, explore) here ... */
+
+/* INSTAGRAM-LIKE POST STYLES */
+.post {
+    background: #fff;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    position: relative;
+    overflow: hidden;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    position: relative; /* For ellipsis menu positioning */
+}
+
+.post-header strong {
+    margin-right: auto;
+}
+
+/* Ellipsis Menu Button */
+.post-options-btn, .profile-options-btn { /* Added .profile-options-btn */
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 10px;
+    color: #555;
+}
+
+/* Ellipsis Dropdown Menu */
+.post-options-dropdown, .profile-options-dropdown { /* Added .profile-options-dropdown */
+    position: absolute;
+    top: 45px; /* Adjust based on header height */
+    right: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 100; /* Ensure it's above other content */
+    display: none; /* Hidden by default */
+    min-width: 120px;
+    overflow: hidden; /* For rounded corners */
+}
+
+.post-options-dropdown button, .profile-options-dropdown button { /* Added .profile-options-dropdown button */
+    display: block;
+    width: 100%;
+    padding: 8px 15px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    border-bottom: 1px solid #eee; /* Separator for menu items */
+    border-radius: 0; /* Override default button radius */
+}
+
+.post-options-dropdown button:last-child, .profile-options-dropdown button:last-child { /* Added .profile-options-dropdown button */
+    border-bottom: none; /* No border on the last item */
+}
+
+.post-options-dropdown button:hover, .profile-options-dropdown button:hover { /* Added .profile-options-dropdown button */
+    background-color: #f0f0f0;
+}
+.post-options-dropdown button.delete-option, .profile-options-dropdown button.delete-option { /* Added .profile-options-dropdown button */
+    color: crimson;
+    font-weight: bold;
+}
+
+
+.post-media {
+    width: 100%;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    max-height: 400px; /* Yaraynta cabbirka ugu badan */
+}
+
+.post-media img, .post-media video {
+    width: 100%;
+    height: auto;
+    max-height: 100%; /* Hubi in sawirku uusan ka badnaan qaybta .post-media */
+    object-fit: contain; /* Ama 'cover' haddii aad rabto inuu buuxiyo oo laga gooyo */
+    display: block;
+    border-radius: 0;
+}
+
+.post-content {
+    padding: 10px 15px;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.like-btn, .comment-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0; /* Ka saar padding-kii hore */
+    margin-right: 5px; /* Margin u dhexeeya like iyo count */
+    display: flex; /* Ku dar si ay u isku xigaan icon-ka iyo text-ka */
+    align-items: center; /* Ku hagaaji xariiqda dhexe */
+}
+.comment-btn {
+    font-size: 20px;
+    margin-left: 15px; /* Kordhi margin-ka comments-ka */
+}
+/* NEW: Share Button Style */
+.share-btn {
+    background: none;
+    border: none;
+    font-size: 20px; /* Adjust size as needed */
+    cursor: pointer;
+    padding: 0;
+    margin-left: 15px; /* Adjust margin as needed */
+    color: #555; /* Icon color */
+}
+.share-btn:hover {
+    color: #004d98; /* Hover color */
+}
+
+.post-likes-count {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    /* No margin-left here, it will be right next to the like button */
+}
+
+.post-caption {
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+/* Initially hide comments section */
+.comments-section {
+    display: none; /* Hidden by default */
+}
+
+.comment-input-area {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+.comment-input-area input {
+    flex-grow: 1;
+    margin: 0 10px 0 0;
+    border-radius: 20px;
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+.comment-input-area button {
+    padding: 8px 15px;
+    border-radius: 20px;
+    background-color: #004d98;
+    color: white;
+    font-weight: normal;
+    white-space: nowrap;
+}
+.comments-list {
+    margin-top: 10px;
+    font-size: 13px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+.comment-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+.comment-item strong {
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+}
+button {
+    padding: 10px;
+    background: #004d98;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+}
+.profile-pic-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    cursor: pointer;
+    background-color: #eee; /* Placeholder background */
+}
+.comment-box {
+    margin-top: 10px;
+}
+/* NEW: Follow button style (visible) */
+.follow-button-visible {
+    background-color: #004d98;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-left: 15px; /* Adjust margin as needed */
+}
+.follow-button-visible:hover {
+    background-color: #003a7a;
+}
+
+
+/* PROFILE VIEW STYLES */
+.profile-container {
+    max-width: 900px;
+    background: white;
+    margin: 0 auto;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative; /* For positioning logout button */
+}
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+.profile-pic-container {
+    display: flex;
+    justify-content: center;
+}
+.profile-pic-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #eee;
+    background-position: center;
+    background-size: cover;
+    border: 3px solid #004d98;
+    object-fit: cover;
+}
+.profile-stats-and-bio {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.profile-username-display {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+    display: flex;
+    align-items: center;
+    position: relative; /* For positioning the new profile options menu */
+}
+.profile-stats {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 10px;
+}
+.stat-item {
+    text-align: center;
+}
+.stat-number {
+    font-weight: bold;
+    font-size: 18px;
+}
+.stat-label {
+    font-size: 14px;
+    color: #666;
+}
+/* Styles for posts within the profile view */
+.profile-posts-section h3 {
+    border-bottom: 2px solid #004d98;
+    padding-bottom: 8px;
+    font-weight: 700;
+    color: #004d98;
+    margin-bottom: 10px;
+}
+.profile-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+.profile-post-item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px 15px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    word-break: break-word;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.profile-post-item img, .profile-post-item video {
+    max-width: 100%;
+    height: auto;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+    margin: 10px auto 0 auto;
+}
+/* Ellipsis menu on profile posts - re-using .profile-options-btn etc. */
+.delete-profile-post-btn { /* Specific button for deletion, position absolute */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 5px;
+    color: #555;
+}
+.profile-post-options-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 100;
+    display: none;
+    min-width: 120px;
+    overflow: hidden;
+}
+.profile-post-options-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 8px 15px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    border-radius: 0;
+}
+.profile-post-options-dropdown button:last-child {
+    border-bottom: none;
+}
+.profile-post-options-dropdown button:hover {
+    background-color: #f0f0f0;
+}
+.profile-post-options-dropdown button.delete-option {
+    color: crimson;
+    font-weight: bold;
+}
+
+/* LOGOUT BUTTON POSITIONING */
+.logout-btn-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10; /* Ensure it's above other profile elements */
+}
+.logout-btn-container button {
+    background-color: #a50044;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* NEW POST MODAL STYLES */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 200; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be responsive */
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative;
+}
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.modal-content h2 {
+    margin-top: 0;
+    color: #004d98;
+    border-bottom: 2px solid #004d98;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.modal-content textarea {
+    min-height: 100px;
+    resize: vertical;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 1em;
+}
+.modal-content input[type="file"] {
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+.modal-content button {
+    margin-top: 15px;
+    width: 100%;
+}
+
+/* PROFILE EDIT MODAL STYLES */
+.profile-edit-modal-content {
+    max-width: 400px;
+}
+.profile-edit-modal-content label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+}
+.profile-edit-modal-content input[type="text"],
+.profile-edit-modal-content textarea {
+    width: calc(100% - 22px); /* Adjust for padding and border */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 5px;
+    font-size: 1em;
+}
+.profile-edit-modal-content button {
+    margin-top: 20px;
+}
+
+/* CHANGE PROFILE PIC MODAL STYLES */
+.profile-pic-modal-content {
+    max-width: 400px;
+    text-align: center;
+}
+.profile-pic-modal-content input[type="file"] {
+    margin-top: 15px;
+}
+.profile-pic-modal-content button {
+    margin-top: 20px;
+}
+
+/* NOTIFICATION STYLES */
+.notification-container h3 {
+    margin-top: 0;
+    color: #004d98;
+    border-bottom: 2px solid #004d98;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95em;
+    color: #333;
+    cursor: pointer; /* Make them clickable for marking as read */
+}
+.notification-item.unread {
+    background-color: #e6f7ff; /* Light blue for unread */
+    font-weight: bold;
+}
+.notification-item:last-child {
+    border-bottom: none;
+}
+.notification-item img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    background-color: #eee; /* Placeholder background */
+}
+.notification-item .timestamp {
+    font-size: 0.8em;
+    color: #888;
+    margin-left: auto;
+    white-space: nowrap;
+}
+.no-notifications {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}
+
+/* NEW: Styles for the Explore/Shorts-like section (ONLY VIDEOS) */
+.explore-container h3 {
+    margin-top: 0;
+    color: #004d98;
+    border-bottom: 2px solid #004d98;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.explore-item {
+    scroll-snap-align: start; /* Snap to the start of each item */
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 80px); /* Make each item take almost full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black; /* Background for media */
+    margin-bottom: 10px; /* Small gap between items */
+    border-radius: 8px;
+    overflow: hidden;
+}
+.explore-item video, .explore-item img { /* Ensure img is not shown here if only videos */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Ensure media is visible within container */
+    display: block;
+}
+.explore-item .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+    color: white;
+    padding: 20px;
+    font-size: 0.9em;
+}
+.explore-item .overlay .overlay-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.explore-item .overlay .overlay-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    border: 2px solid white;
+}
+.explore-item .overlay .overlay-header strong {
+    font-size: 1.1em;
+    color: white;
+}
+.explore-item .overlay p {
+    margin: 0;
+    line-height: 1.4;
+}
+.explore-item .overlay .explore-actions {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+}
+.explore-item .overlay .explore-actions button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+.explore-item .overlay .explore-actions span {
+    font-size: 0.8em;
+    display: block;
+    margin-top: 5px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+}
+.explore-item .overlay .explore-actions .share-btn {
+    font-size: 24px; /* Adjust size for explore */
+}
